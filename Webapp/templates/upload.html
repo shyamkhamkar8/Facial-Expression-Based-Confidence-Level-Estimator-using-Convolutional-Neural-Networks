@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Upload Image</title>
+	<style>
+		body {
+			background-color: #f2f2f2;
+		}
+		img {
+			max-width: 500px;
+			margin-top: 20px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Upload Image</h1>
+	<form action="/" method="POST" enctype="multipart/form-data">
+		<input type="file" name="file"><br><br>
+		<input type="submit" value="Upload">
+	</form>
+	<?php if(isset($image_path)): ?>
+		<img src="<?php echo $image_path; ?>" alt="Selected Image">
+	<?php endif; ?>
+</body>
+</html>
