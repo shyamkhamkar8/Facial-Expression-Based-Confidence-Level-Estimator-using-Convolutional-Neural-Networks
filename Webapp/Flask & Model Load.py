@@ -61,7 +61,7 @@ def upload_image():
     else:
         message = 'Predicted class is Neutral'
 
-    return render_template('new.html', message=message, image=img_str)
+    return render_template('HTML and CSS webpage configuration.html', message=message, image=img_str)
 
     return 'File uploaded and ML code applied successfully!'
 
