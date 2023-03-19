@@ -40,26 +40,41 @@ def upload_image():
     upload_folder = app.config['UPLOAD_FOLDER']
     filepath = os.path.join(upload_folder, filename)
 
+   # Imported necessary libraries
     from tensorflow import keras
     import tensorflow as tf
     import cv2
     import numpy as np
-    model = keras.models.load_model(r"E:\all folder\Confident_level_prediction_final_9_march.h5", compile=False)
+    
+
+    # Loading the model
+    model = keras.models.load_model('/content/final_model.h5')
     model.compile()
 
+    # Reading image using imread method
     img = cv2.imread(filepath)
     img_str = cv2.imencode('.jpg', img)[1].tostring()
+    
 
-    resize = tf.image.resize(img, (256,256))
+    # Converting image to greyscale and resizing 
+    gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY) 
+    gray_img = np.expand_dims(gray_img, axis=-1)      #adding dimension because tf.image.resize() required 3D input grey scale has 2D
+    resize = tf.image.resize(gray_img, (128, 128))
+    # plt.imshow(resize.numpy().astype(int), cmap='gray') 
+    # plt.show()
+
     yhat = model.predict(np.expand_dims(resize/255, 0))
+    yhat=1-yhat   #inference model got train on positive class as unconfident 
     print(yhat)
 
+
     if yhat >= 0.55:
-        message = 'Predicted class is Confident'
-    elif yhat <= 0.20:
-        message = 'Predicted class is Unconfident'
+        message = 'Predicted Level of Confidence : High'
+    elif yhat <= 0.30:
+        message = 'Predicted Level of Confidence : Low'
     else:
-        message = 'Predicted class is Neutral'
+        message = 'Predicted Level of Confidence : Neutral'
+    
 
     return render_template('HTML and CSS webpage configuration.html', message=message, image=img_str)
 
